@@ -8,9 +8,9 @@ $(function(){
         //渲染数据
         for(let i =0;i<arr.length;i++){
             str+=`
-                <li>
+                <li class="select">
                     <input type="checkbox" index="${i}" class="two"/>
-                    <p>${arr[i]}</p>
+                    <p contenteditable="true" index="${i}">${arr[i]}</p>
                     <a index="${i}">-</a>
                 </li>
             
@@ -19,10 +19,10 @@ $(function(){
         str+=`</ol><h2>已经完成 <span id="donecount">${arr2.length}</span></h2><ul id="donelist">`
         for(let j = 0;j<arr2.length;j++){
             str+=`
-                <li>
+                <li class="load">
                     <input type="checkbox" class="three" checked="checked" index="${j}" />
-                    <p onclick="edit(4)">${arr2[j]}</p>
-                    <a href="javascript:remove(4)">-</a>
+                    <p contenteditable="true" index="${j}">${arr2[j]}</p>
+                    <a>-</a>
                 </li>            
         `
         }
@@ -38,7 +38,7 @@ $(function(){
         $('#donelist').on('click','li>a',function(){
             const index = this.getAttribute('index')
             arr2.splice(index,1)
-            window.localStorage.setItem('arr',JSON.stringify(arr))
+            window.localStorage.setItem('arr2',JSON.stringify(arr2))
             xr()
         })
         //选中添加到ul内
@@ -67,7 +67,25 @@ $(function(){
             window.localStorage.setItem('arr',JSON.stringify(arr))
             xr()
         })
+
+        //编辑事件
+        $('.select').on('blur','p',function(){
+            // console.log(this)
+            const index = $(this).attr('index')
+            arr[index] = $(this).html()
+            window.localStorage.setItem('arr',JSON.stringify(arr))
+            xr()
+        })
+        $('.load').on('blur','p',function(){
+            console.log(this)
+            const index = $(this).attr('index')
+            arr2[index] = $(this).html()
+            window.localStorage.setItem('arr2',JSON.stringify(arr2))
+            xr()
+        })
     }
+
+    
 
     //按下回车添加数据
     $('.one').on('keydown',function(e){
@@ -91,13 +109,15 @@ $(function(){
     
     
     //发送跨域请求
-    const xhr = new XMLHttpRequest()
-    xhr.open('get','/ass')
-    xhr.onload=function(){
-        const res = JSON.parse(xhr.responseText)
-        console.log(res)
-    }
-    xhr.send()
+    ajax({
+        url:'/ass',
+        success(res){
+            res = JSON.parse(res)
+            // console.log(res.area)
+            $('#ipv4').html(res.ip)
+            $('#addr').html(res.area)
+        }
+    })
 })
 
 
