@@ -88,21 +88,16 @@ $(function(){
             xr()
         }
     })
-
+    
     
     //发送跨域请求
-   
-    // const str = $.get(url,null,null,'json')
-    // console.log(str)
-    
+    const xhr = new XMLHttpRequest()
+    xhr.open('get','/ass')
+    xhr.onload=function(){
+        const res = JSON.parse(xhr.responseText)
+        console.log(res)
+    }
+    xhr.send()
 })
 
 
-const script = document.createElement('script')
-const url = 'https://api.i-lynn.cn/getIpInfo?callback=get'
-script.src = url
-document.body.appendChild(script)
-script.remove()
-function get(res){
-    console.log(res)
-}
